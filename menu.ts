@@ -28,10 +28,14 @@ async function addRecord() {
   const date = (await prompt('Date (YYYY-MM-DD) [today]: ')).trim() || new Date().toISOString().slice(0, 10);
 
   const amount = Number(amountStr);
+  
+  // If there is no decription
   if (!description) {
     console.log('Description is required.');
     return;
   }
+
+  // If there is no Number.
   if (Number.isNaN(amount)) {
     console.log('Amount must be a number.');
     return;

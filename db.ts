@@ -29,7 +29,13 @@ function init() {
 
 function getAllExpenses() {
   const d = openDb();
-  return d.prepare('SELECT id, description, amount, date FROM expenses ORDER BY date DESC, id DESC').all() as Expense[];
+
+  const select_stmt = `
+    SELECT id, description, printf('%.2f', amount) AS Amount, date
+    FROM expenses
+    ORDER BY date DESC, id DESC
+  `;
+  return d.prepare(select_stmt).all() as Expense[];
 }
 
 function insertExpense(e: Expense) {
