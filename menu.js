@@ -17,6 +17,14 @@ function showAll() {
         return;
     }
     console.table(rows);
+    const db = dbModule.openDb();
+    if (dbModule.tableExists(db, 'expenses')) {
+        console.log('✅ "expenses" table exists!');
+    }
+    else {
+        console.log('❌ "expenses" table does not exist.');
+    }
+    dbModule.close();
 }
 async function addRecord() {
     const description = (await prompt('Description: ')).trim();

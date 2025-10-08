@@ -18,6 +18,13 @@ function init() {
       date TEXT NOT NULL
     )
   `).run();
+    d.prepare(`
+    CREATE TABLE IF NOT EXISTS meta 
+    (
+      key TEXT PRIMARY KEY, 
+      value TEXT
+    )
+  `).run();
 }
 function getAllExpenses() {
     const d = openDb();
@@ -27,6 +34,10 @@ function getAllExpenses() {
     ORDER BY date DESC, id DESC
   `;
     return d.prepare(select_stmt).all();
+}
+function tableExists(db, tableName) {
+    const all_tabs = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name=?`).get(tableName);
+    return !!all_tabs;
 }
 function insertExpense(e) {
     const d = openDb();

@@ -1,4 +1,5 @@
 const Database = require('better-sqlite3') as typeof import('better-sqlite3');
+type DatabaseType = import('better-sqlite3').Database;
 
 export type Expense = {
   id?: number;
@@ -25,6 +26,15 @@ function init() {
       date TEXT NOT NULL
     )
   `).run();
+
+    d.prepare(`
+    CREATE TABLE IF NOT EXISTS meta 
+    (
+      key TEXT PRIMARY KEY, 
+      value TEXT
+    )
+  `).run();
+
 }
 
 function getAllExpenses() {
@@ -36,6 +46,15 @@ function getAllExpenses() {
     ORDER BY date DESC, id DESC
   `;
   return d.prepare(select_stmt).all() as Expense[];
+
+}
+
+function tableExists(db: DatabaseType, tableName: string): boolean {
+  const all_tabs = db.prepare(
+    `SELECT name FROM sqlite_master WHERE type='table' AND name=?`
+  ).get(tableName);
+
+  return !!all_tabs;
 }
 
 function insertExpense(e: Expense) {
